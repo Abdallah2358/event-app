@@ -3,8 +3,14 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+
+use Mostafaznv\NovaMapField\Fields\MapPointField;
 
 class Event extends Resource
 {
@@ -40,6 +46,22 @@ class Event extends Resource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Name', 'name')->sortable(),
+            DateTime::make('Scheduled at', 'scheduled_at')->sortable(),
+            Number::make('Lasts for', 'days'),
+            Text::make('Start Time', 'start')
+                ->withMeta(['extraAttributes' => ['type' => 'time']]),
+            Text::make('End Time', 'end')
+                ->withMeta(['extraAttributes' => ['type' => 'time']]),
+            Number::make('Capacity', 'capacity'),
+            Number::make('Wait list capacity', 'wait_list_capacity'),
+            Select::make('Status', 'status')->options(
+                [
+                    'live' => 'Live',
+                    'draft' => 'Draft'
+                ]
+            )->displayUsingLabels(),
+            MapPointField::make('location'),
         ];
     }
 
