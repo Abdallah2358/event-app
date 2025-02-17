@@ -20,8 +20,7 @@ return new class extends Migration
             $table->time('end')->nullable();
             $table->unsignedInteger('capacity')->default(100);
             $table->unsignedInteger('wait_list_capacity')->default(1000);
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->geometry('location', subtype: 'point')->nullable();
             $table->enum('status', ['live', 'draft'])->default('draft');
             $table->timestamps();
         });
