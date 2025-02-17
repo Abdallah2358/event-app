@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->dateTime('scheduled_at');
-            $table->unsignedSmallInteger('days');
-            $table->time('start');
-            $table->time('end');
+            $table->unsignedSmallInteger('days')->default(1);
+            $table->time('start')->nullable();
+            $table->time('end')->nullable();
             $table->unsignedInteger('capacity')->default(100);
-            $table->unsignedInteger('waitlist_capacity')->default(1000);
+            $table->unsignedInteger('wait_list_capacity')->default(1000);
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
-            $table->enum('status', ['live', 'draft']);
+            $table->enum('status', ['live', 'draft'])->default('draft');
             $table->timestamps();
         });
     }
