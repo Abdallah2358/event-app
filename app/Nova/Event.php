@@ -37,6 +37,22 @@ class Event extends Resource
         'id',
     ];
 
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query): Builder
+    {
+        if (!$request->user()->is_admin) {
+            return $query->where('status', 'live');
+        }
+        return $query;
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
