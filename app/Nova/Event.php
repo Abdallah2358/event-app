@@ -77,7 +77,8 @@ class Event extends Resource
                     'draft' => 'Draft'
                 ]
             )->displayUsingLabels(),
-            MapPointField::make('location'),
+            MapPointField::make('location')->hideFromIndex(),
+
         ];
     }
 
