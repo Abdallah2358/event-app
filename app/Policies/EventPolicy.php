@@ -87,4 +87,7 @@ class EventPolicy
         }
         return false;
     }
+    public function runAction(){
+        return true;
+    }
 }

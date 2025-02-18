@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\UserJoinEvent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -119,6 +121,13 @@ class Event extends Resource
      */
     public function actions(NovaRequest $request): array
     {
-        return [];
+        return [
+            UserJoinEvent::make()
+                ->showOnIndex()
+                ->showInline()
+                ->confirmText('Are you sure you want to join this event?')
+                ->confirmButtonText('Join')
+                ->cancelButtonText("Don't join"),
+        ];
     }
 }
