@@ -3,8 +3,12 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Nova\Event;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Features;
+use Laravel\Nova\Menu\MenuItem;
+use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -16,7 +20,16 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
-
+        Nova::mainMenu(
+            function (Request $request) {
+                return[
+                    MenuSection::make('Events',
+                    [
+                        MenuItem::resource(Event::class)
+                    ])
+                ];
+            }
+        );
         //
     }
 
