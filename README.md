@@ -18,6 +18,7 @@ This gives you the ability to know who and how many are attending you event and 
 - MySql
 - Nova License
 ## Steps to set up locally
+1. Run following commands
 ```bash 
     git clone https://github.com/Abdallah2358/event-app.git
     cd event-app
@@ -25,6 +26,21 @@ This gives you the ability to know who and how many are attending you event and 
     composer install
     cp .env.example .env
     php artisan key:generate
+```
+2. update `.env` file with your database credentials and nova license key
+```
+
+ NOVA_LICENSE_KEY=
+
+ DB_CONNECTION=mysql
+ DB_HOST=127.0.0.1
+ DB_PORT=3306
+ DB_DATABASE=event_app
+ DB_USERNAME=root
+ DB_PASSWORD=
+```
+3. run following commands
+```bash
     php artisan migrate --seed
     php artisan serve
 ```
