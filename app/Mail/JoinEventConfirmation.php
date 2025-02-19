@@ -61,6 +61,7 @@ class JoinEventConfirmation extends Mailable
     }
     function getAddressFromLatLongOSM($latitude, $longitude)
     {
+        # ToDo : fix ssl issue
         $response = Http::withoutVerifying()->get("https://nominatim.openstreetmap.org/reverse", [
             'lat' => $latitude,
             'lon' => $longitude,
@@ -76,5 +77,4 @@ class JoinEventConfirmation extends Mailable
         // If address lookup fails, return a clickable Google Maps link
         return '<a href="https://www.google.com/maps?q=' . $latitude . ',' . $longitude . '" target="_blank">Open in Google Maps</a>';
     }
-
 }
