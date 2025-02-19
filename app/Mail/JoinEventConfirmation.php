@@ -32,7 +32,7 @@ class JoinEventConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Event' . $this->event->name . 'Joined Successfully',
+            subject: 'Event ' . $this->event->name . ' Joined Successfully',
         );
     }
 
