@@ -53,7 +53,7 @@ class UserJoinEvent extends Action
                     return ActionResponse::danger('You already joined ' . $event->name . '.');
                 }
 
-                if ($this->overlapsWithOtherEvents($user, $event)) {
+                if (!$this->overlapsWithOtherEvents($user, $event)) {
                     if ($event->capacity) {
 
                         $event->users()->attach($user);
@@ -113,21 +113,22 @@ class UserJoinEvent extends Action
     protected function overlapsWithOtherEvents(User $user, Event $event): bool
     {
         $events_overlapping_before = $user->events()
-            ->whereDate('end_date', '>', $event->start_date) // Get today's events
-            ->where('end_time', '>', $event->start_time) // Events ending after given time
+            ->whereDate('end_date', '>=', $event->start_date)
+            ->whereDate('start_date', '<=', $event->start_date)
+            ->where('end_time', '>', $event->start_time)
             ->get();
 
         $events_overlapping_after = $user->events()
-            ->whereDate('start_date', '<', $event->end_date) // Get today's events
-            ->where('end_time', '<', $event->start_time) // Events ending after given time
+            ->whereDate('start_date', '<', $event->end_date)
+            ->where('end_time', '<', $event->start_time)
             ->get();
 
         $events_overlapping_surrounded = $user->events()
-            ->whereDate('start_date', '<', $event->start_date) // Get today's events
-            ->where('end_time', '<', $event->start_time) // Events ending after given time
+            ->whereDate('start_date', '<', $event->start_date)
+            ->where('end_time', '<', $event->start_time)
             ->get();
-        return (count($events_overlapping_before) === 0
-            && count($events_overlapping_after) === 0
-            && count($events_overlapping_surrounded) === 0);
+        return (count($events_overlapping_before) > 0
+            || count($events_overlapping_after) > 0
+            || count($events_overlapping_surrounded) > 0);
     }
 }
