@@ -2,12 +2,14 @@
 
 namespace App\Nova\Actions;
 
+use App\Mail\JoinEventConfirmation;
 use App\Models\Event;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Actions\ActionResponse;
 use Laravel\Nova\Fields\ActionFields;
@@ -37,7 +39,9 @@ class UserJoinEvent extends Action
             // dd($model);
             // $event = (Event) $model;
             if ($model->status == 'live') {
-                $model->users()->attach(request()->user());
+                $user = request()->user();
+                $model->users()->attach($user);
+                Mail::to($user->email)->send(new JoinEventConfirmation(event: $model, user: $user));
             }
         }
         return $models;
