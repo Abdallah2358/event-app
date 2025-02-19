@@ -68,18 +68,18 @@ class Event extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Name', 'name')->sortable(),
-            Date::make('Start Date', 'start_date')->sortable(),
-            Date::make('End Date', 'end_date')->sortable(),
+            Text::make('Name', 'name')->sortable()->creationRules(['required']),
+            Date::make('Start Date', 'start_date')->sortable()->creationRules(['required']),
+            Date::make('End Date', 'end_date')->sortable()->creationRules(['required']),
             Number::make('Duration', 'days')
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
             Text::make('Start Time', 'start_time')
-                ->withMeta(['extraAttributes' => ['type' => 'time']]),
+                ->withMeta(['extraAttributes' => ['type' => 'time']])->creationRules(['required']),
             Text::make('End Time', 'end_time')
-                ->withMeta(['extraAttributes' => ['type' => 'time']]),
-            Number::make('Capacity', 'capacity'),
-            Number::make('Wait list capacity', 'wait_list_capacity'),
+                ->withMeta(['extraAttributes' => ['type' => 'time']])->creationRules(['required']),
+            Number::make('Capacity', 'capacity')->creationRules(['required']),
+            Number::make('Wait list capacity', 'wait_list_capacity')->creationRules(['required']),
             Badge::make('Status', '', function () {
                 return $this->getUserJoinStatus(auth()->id());
             })->map([
@@ -96,7 +96,7 @@ class Event extends Resource
                     'live' => 'Live',
                     'draft' => 'Draft'
                 ]
-            )->displayUsingLabels()->hideFromIndex()->hideFromDetail(),
+            )->displayUsingLabels()->hideFromIndex()->hideFromDetail()->creationRules(['required']),
             Badge::make('Status', 'status')->map([
                 'live' => 'success',
                 'draft' => 'warning'
@@ -106,7 +106,7 @@ class Event extends Resource
                     'draft' => 'Draft'
                 ]
             ),
-            MapPointField::make('location')->hideFromIndex(),
+            MapPointField::make('location')->hideFromIndex()->creationRules(['required']),
         ];
     }
 
