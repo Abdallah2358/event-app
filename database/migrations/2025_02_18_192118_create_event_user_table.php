@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Event::class);
+            $table->boolean('is_on_wait_list')->default('false');
             $table->timestamps();
         });
     }
