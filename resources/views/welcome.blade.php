@@ -20,7 +20,7 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    <title inertia="">Sign Up</title>
+    <title inertia="">Home</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="use-credentials">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet"
