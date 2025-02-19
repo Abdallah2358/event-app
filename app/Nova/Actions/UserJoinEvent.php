@@ -39,20 +39,23 @@ class UserJoinEvent extends Action
     {
 
         foreach ($events as $event) {
+
             if ($event->status == 'live') {
                 $user = request()->user();
-                $event_exists  = $user->events()->where('id', $event->id);
-                if ($event_exists) {
+                $event_exists  = $event_exists = $user->events()->find($event->id) !== null;
+
+                if ($event_exists) { // user already joined this event
                     $user->notify(
                         NovaNotification::make()->message('You already joined ' . $event->name . '.')
                             ->type('warning')
                             ->icon('information-circle')
                     );
-                    continue;
+                    return ActionResponse::danger('You already joined ' . $event->name . '.');
                 }
+
                 if ($this->overlapsWithOtherEvents($user, $event)) {
                     if ($event->capacity) {
-                        # code...
+
                         $event->users()->attach($user);
                         $event->capacity -= 1;
                         $event->save();
@@ -62,7 +65,9 @@ class UserJoinEvent extends Action
                                 ->icon('check')
                         );
                         Mail::to($user->email)->send(new JoinEventConfirmation(event: $event, user: $user));
-                    } else if ($event->wait_list_capacity) {
+                        return ActionResponse::message('Event ' . $event->name . ' Joined Successfully.');
+                    } else if ($event->wait_list_capacity) { // event at full capacity but wait list has capacity
+
                         $event->users()->attach($user, ['is_on_wait_list' => true]);
                         $event->wait_list_capacity -= 1;
                         $event->save();
@@ -71,20 +76,27 @@ class UserJoinEvent extends Action
                                 ->type('warning')
                                 ->icon('clock')
                         );
+                        return ActionResponse::message('Event ' . $event->name . 'is full you were added to wait list Successfully.');
+
                         # Todo : add Wait list Email
                         // Mail::to($user->email)->send(new JoinEventConfirmation(event: $event, user: $user));
-                    } else {
+
+                    } else { // event at full capacity and at full wait list capacity
+
                         NovaNotification::make()->message('Sorry event ' . $event->name . ' is at full capacity.')
                             ->type('error')
                             ->icon('ban');
+                        return ActionResponse::danger('Sorry event ' . $event->name . ' is at full capacity.');
                     }
-                } else {
-                    # Todo : add Error  message
+                } else { // event overlaps with other events user joined
+
                     NovaNotification::make()->message('Sorry the event ' . $event->name . ' overlaps with other events you joined.')
                         ->type('error')
                         ->icon('ban');
+                    return ActionResponse::danger('Sorry the event ' . $event->name . ' overlaps with other events you joined.');
                 }
             }
+            return ActionResponse::danger('Can only join Live Events');
         }
         return $events;
     }
