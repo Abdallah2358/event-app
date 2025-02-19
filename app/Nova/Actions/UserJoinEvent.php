@@ -119,16 +119,31 @@ class UserJoinEvent extends Action
             ->get();
 
         $events_overlapping_after = $user->events()
-            ->whereDate('start_date', '<', $event->end_date)
-            ->where('end_time', '<', $event->start_time)
+            ->whereDate('start_date', '<=', $event->end_date)
+            ->whereDate('end_date', '>=', $event->end_date)
+            ->where('end_time', '>', $event->start_time)
+            ->get();
+        $events_overlapping_I_surround = $user->events()
+            ->whereDate('start_date', '>=', $event->start_date)
+            ->whereDate('end_date', '<=', $event->end_date)
+            ->where('end_time', '>=', $event->start_time)
+            ->get();
+        $events_overlapping_surrounded = $user->events()
+            ->whereDate('start_date', '>=', $event->start_date)
+            ->whereDate('end_date', '<', $event->start_date)
+            ->where('end_time', '>', $event->start_time)
+            ->get();
+        $events_overlapping_surround_me = $user->events()
+            ->whereDate('start_date', '<=', $event->start_date)
+            ->whereDate('end_date', '>=', $event->end_date)
+            ->where('end_time', '>=', $event->start_time)
             ->get();
 
-        $events_overlapping_surrounded = $user->events()
-            ->whereDate('start_date', '<', $event->start_date)
-            ->where('end_time', '<', $event->start_time)
-            ->get();
+
         return (count($events_overlapping_before) > 0
             || count($events_overlapping_after) > 0
-            || count($events_overlapping_surrounded) > 0);
+            || count($events_overlapping_I_surround) > 0
+            || count($events_overlapping_surround_me) > 0
+        );
     }
 }
