@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->dateTime('scheduled_at');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->unsignedSmallInteger('days')->default(1);
-            $table->time('start')->nullable();
-            $table->time('end')->nullable();
+            $table->time('start_time');
+            $table->time('end_time');
             $table->unsignedInteger('capacity')->default(100);
             $table->unsignedInteger('wait_list_capacity')->default(1000);
             $table->geometry('location', subtype: 'point')->nullable();

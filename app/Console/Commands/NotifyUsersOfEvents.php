@@ -32,7 +32,7 @@ class NotifyUsersOfEvents extends Command
     public function handle()
     {
         //
-        $eventsToday = Event::whereDate('scheduled_at', Carbon::now('UTC')->format('Y-m-d'))
+        $eventsToday = Event::whereDate('start_date', Carbon::now('UTC')->format('Y-m-d'))
             ->where('status', 'live')
             ->get();
         foreach ($eventsToday as $event) {
@@ -40,9 +40,7 @@ class NotifyUsersOfEvents extends Command
             foreach ($users as $user) {
                 $user->notify(
                     NovaNotification::make()
-                        ->message('Event ' . $event->name . ' starts at ' . $event->start . ' today !!')
-                        // ->message('Starts at' . $event->start . '')
-                        ->action('View', URL::remote((route('nova.pages.detail', ['events', $event->id]))))
+                        ->message('Event ' . $event->name . ' starts at ' . $event->start_time . ' today !!')                        ->action('View', URL::remote((route('nova.pages.detail', ['events', $event->id]))))
                         ->icon('calendar')
                         ->type('info')
                 );

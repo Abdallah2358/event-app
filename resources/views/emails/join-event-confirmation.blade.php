@@ -259,7 +259,7 @@
                                                                         </td>
                                                                         <td
                                                                             style="font-family: 'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif; font-size: 16px; font-weight: undefined; color: #ffffff; vertical-align: middle; letter-spacing: undefined; text-align: left; line-height: normal;">
-                                                                            {{$event->scheduled_at}}
+                                                                            {{$event->start_date}}
                                                                         </td>
                                                                     </tr>
                                                                 </table>

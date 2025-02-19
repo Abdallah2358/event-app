@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Actions\UserJoinEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -37,6 +38,7 @@ class Event extends Resource
      */
     public static $search = [
         'id',
+        'name'
     ];
 
 
@@ -65,11 +67,14 @@ class Event extends Resource
         return [
             ID::make()->sortable(),
             Text::make('Name', 'name')->sortable(),
-            DateTime::make('Scheduled at', 'scheduled_at')->sortable(),
-            Number::make('Lasts for', 'days'),
-            Text::make('Start Time', 'start')
+            Date::make('Start Date', 'start_date')->sortable(),
+            Date::make('End Date', 'end_date')->sortable(),
+            Number::make('Duration', 'days')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Text::make('Start Time', 'start_time')
                 ->withMeta(['extraAttributes' => ['type' => 'time']]),
-            Text::make('End Time', 'end')
+            Text::make('End Time', 'end_time')
                 ->withMeta(['extraAttributes' => ['type' => 'time']]),
             Number::make('Capacity', 'capacity'),
             Number::make('Wait list capacity', 'wait_list_capacity'),
