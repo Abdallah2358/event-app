@@ -5,8 +5,10 @@ namespace App\Nova;
 use App\Nova\Actions\UserJoinEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -78,14 +80,33 @@ class Event extends Resource
                 ->withMeta(['extraAttributes' => ['type' => 'time']]),
             Number::make('Capacity', 'capacity'),
             Number::make('Wait list capacity', 'wait_list_capacity'),
+            Badge::make('Status', '', function () {
+                return $this->getUserJoinStatus(auth()->id());
+            })->map([
+                0 => 'info',
+                1 => 'warning',
+                2 => 'success',
+            ])->labels([
+                0 => 'Not Joined',
+                1 => 'On Waiting List',
+                2 => 'Joined',
+            ]),
             Select::make('Status', 'status')->options(
                 [
                     'live' => 'Live',
                     'draft' => 'Draft'
                 ]
-            )->displayUsingLabels(),
+            )->displayUsingLabels()->hideFromIndex()->hideFromDetail(),
+            Badge::make('Status', 'status')->map([
+                'live' => 'success',
+                'draft' => 'warning'
+            ])->labels(
+                [
+                    'live' => 'Live',
+                    'draft' => 'Draft'
+                ]
+            ),
             MapPointField::make('location')->hideFromIndex(),
-
         ];
     }
 

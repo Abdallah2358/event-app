@@ -31,6 +31,18 @@ class Event extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'event_user');
+        return $this->belongsToMany(User::class, 'event_user')->withPivot('is_on_wait_list');
+    }
+    public function getUserJoinStatus($userId)
+    {
+        # Todo : Make status into Enums
+        $user = $this->users()->where('user_id', $userId)->first();
+        if (!$user) {
+            return 0; // Not joined
+        }
+        if ($user->pivot->is_on_wait_list === 1) {
+            return 1;
+        }
+        return 2;
     }
 }
